@@ -413,10 +413,10 @@ export default function DigitalKeyboard({
         .key-correct > *:nth-child(4) { stroke: #22C55E !important; }
 
         /* Generic Red Incorrect Key Style */
-        .key-incorrect > *:nth-child(1) { fill: #FCA5A5 !important; }
-        .key-incorrect > *:nth-child(2) { stroke: #F87171 !important; }
-        .key-incorrect > *:nth-child(3) { fill: #FECACA !important; }
-        .key-incorrect > *:nth-child(4) { stroke: #EF4444 !important; }
+        .key-incorrect > *:nth-child(1) { fill: #F4728A !important; }
+        .key-incorrect > *:nth-child(2) { stroke: #F88A9F !important; }
+        .key-incorrect > *:nth-child(3) { fill: #FCAEBE !important; }
+        .key-incorrect > *:nth-child(4) { stroke: #F68B9F !important; }
 
         /* Generic Blue-ish Key Style (applied to next, hint, and explicit blue state) */
         .key-blue > *:nth-child(1), .key-next > *:nth-child(1), .key-hint > *:nth-child(1) { fill: #7AD8F8 !important; }
