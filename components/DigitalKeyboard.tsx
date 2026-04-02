@@ -332,8 +332,8 @@ export default function DigitalKeyboard({
 
         .key-group {
           transition:
-            transform 0.1s cubic-bezier(0.4, 0, 0.2, 1),
-            filter 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            transform 0.08s cubic-bezier(0.34, 1.8, 0.64, 1),
+            filter 0.08s cubic-bezier(0.34, 1.8, 0.64, 1);
           transform-origin: center;
           cursor: pointer;
           transform-box: fill-box;
@@ -343,24 +343,24 @@ export default function DigitalKeyboard({
           filter: brightness(0.98);
         }
 
-        /* Active/Pressed state - dark inversion matching Frame 48 */
+        /* Active/Pressed state - dark with white text */
         .key-active {
-          transform: scale(0.96) translateY(2px);
+          transform: scale(0.95) translateY(2px);
           filter:
-            invert(0.85)
+            invert(1)
             hue-rotate(180deg)
-            saturate(0.3)
-            brightness(0.4)
-            contrast(1.2) !important;
+            saturate(0)
+            brightness(0.35)
+            contrast(2) !important;
           transition:
-            transform 0.05s cubic-bezier(0.4, 0, 1, 1),
-            filter 0.05s cubic-bezier(0.4, 0, 1, 1);
+            transform 0.03s cubic-bezier(0.2, 0, 0.4, 1),
+            filter 0.03s cubic-bezier(0.2, 0, 0.4, 1);
         }
 
-        /* Inner elements within pressed key */
-        .key-active rect,
-        .key-active path {
-          transition: fill 0.05s, stroke 0.05s;
+        /* Make text paths white in pressed state */
+        .key-active path[fill="#404040"],
+        .key-active path[fill="white"] {
+          filter: brightness(3) !important;
         }
 
         /* Correct state - green tint */
@@ -406,11 +406,11 @@ export default function DigitalKeyboard({
           }
         }
 
-        /* Key release animation - spring back */
+        /* Key release animation - fast springy bounce back */
         .key-group:not(.key-active):not(.key-correct):not(.key-incorrect) {
           transition:
-            transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
-            filter 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform 0.12s cubic-bezier(0.34, 2.2, 0.64, 1),
+            filter 0.12s cubic-bezier(0.34, 2.2, 0.64, 1);
         }
 
         /* Typing text styles */
