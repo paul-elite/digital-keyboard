@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { svgIndexToCode, isCorrectKey, getExpectedCode } from '@/lib/keyMap';
 
 // Key state for visual feedback
-export type KeyState = 'idle' | 'active' | 'correct' | 'incorrect' | 'next' | 'hint';
+export type KeyState = 'idle' | 'active' | 'correct' | 'incorrect' | 'next' | 'hint' | 'blue';
 
 export interface TypingStats {
   totalKeystrokes: number;
@@ -129,7 +129,7 @@ export default function DigitalKeyboard({
     if (!group) return;
 
     // Remove all state classes
-    group.classList.remove('key-active', 'key-correct', 'key-incorrect', 'key-next', 'key-hint');
+    group.classList.remove('key-active', 'key-correct', 'key-incorrect', 'key-next', 'key-hint', 'key-blue');
 
     // Add new state class
     if (state !== 'idle') {
@@ -410,27 +410,11 @@ export default function DigitalKeyboard({
           animation: shake 0.15s cubic-bezier(0.36, 0.07, 0.19, 0.97);
         }
 
-        /* Next expected key - subtle blue highlight */
-        .key-next {
-          filter:
-            brightness(1.02)
-            drop-shadow(0 0 8px rgba(99, 179, 237, 0.5)) !important;
-          animation: pulse 2s ease-in-out infinite;
-        }
-
-        /* Hint state - gentle glow for tips/tutorials */
-        .key-hint {
-          filter:
-            brightness(1.05)
-            drop-shadow(0 0 12px rgba(147, 112, 219, 0.6)) !important;
-          animation: hint-pulse 1.5s ease-in-out infinite;
-        }
-
-        /* Generic Blue-ish Key Style */
-        .key-blue > *:nth-child(1) { fill: #7AD8F8 !important; }
-        .key-blue > *:nth-child(2) { stroke: #8EBFF6 !important; }
-        .key-blue > *:nth-child(3) { fill: #AEE7FD !important; }
-        .key-blue > *:nth-child(4) { stroke: #85B8FB !important; }
+        /* Generic Blue-ish Key Style (applied to next, hint, and explicit blue state) */
+        .key-blue > *:nth-child(1), .key-next > *:nth-child(1), .key-hint > *:nth-child(1) { fill: #7AD8F8 !important; }
+        .key-blue > *:nth-child(2), .key-next > *:nth-child(2), .key-hint > *:nth-child(2) { stroke: #8EBFF6 !important; }
+        .key-blue > *:nth-child(3), .key-next > *:nth-child(3), .key-hint > *:nth-child(3) { fill: #AEE7FD !important; }
+        .key-blue > *:nth-child(4), .key-next > *:nth-child(4), .key-hint > *:nth-child(4) { stroke: #85B8FB !important; }
 
         @keyframes shake {
           0%, 100% { transform: translateX(0) scale(0.97); }
@@ -438,24 +422,6 @@ export default function DigitalKeyboard({
           40% { transform: translateX(4px) scale(0.97); }
           60% { transform: translateX(-3px) scale(0.97); }
           80% { transform: translateX(3px) scale(0.97); }
-        }
-
-        @keyframes pulse {
-          0%, 100% {
-            filter: brightness(1.02) drop-shadow(0 0 8px rgba(99, 179, 237, 0.5));
-          }
-          50% {
-            filter: brightness(1.05) drop-shadow(0 0 14px rgba(99, 179, 237, 0.7));
-          }
-        }
-
-        @keyframes hint-pulse {
-          0%, 100% {
-            filter: brightness(1.05) drop-shadow(0 0 12px rgba(147, 112, 219, 0.6));
-          }
-          50% {
-            filter: brightness(1.1) drop-shadow(0 0 18px rgba(147, 112, 219, 0.85));
-          }
         }
 
         /* Key release animation - fast springy bounce back */
