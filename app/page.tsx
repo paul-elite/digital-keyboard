@@ -99,7 +99,7 @@ export default function Home() {
         className="w-full max-w-5xl relative"
         style={{
           transform: isLoaded ? 'translateY(0)' : 'translateY(80px)',
-          transition: 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)',
+          transition: 'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s',
         }}
       >
         <DigitalKeyboard
