@@ -100,7 +100,7 @@ export default function Home() {
         style={{
           transform: isLoaded ? 'translateY(0)' : 'translateY(60px)',
           opacity: isLoaded ? 1 : 0,
-          transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease-out',
+          transition: 'transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease-out',
         }}
       >
         <DigitalKeyboard
