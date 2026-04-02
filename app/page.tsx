@@ -21,6 +21,9 @@ export default function Home() {
         setGameState('playing');
         setPhraseIndex(Math.floor(Math.random() * PHRASES.length));
         setStats(null);
+      } else if (gameState === 'playing' && e.code === 'Escape') {
+        e.preventDefault();
+        setGameState('idle');
       }
     };
 

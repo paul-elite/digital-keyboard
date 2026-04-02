@@ -419,12 +419,12 @@ export default function DigitalKeyboard({
 
           {/* Orange gradients for escape/cancel state - top to bottom (exact SVG colors) */}
           <linearGradient id="orange-outer" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="#F97316" />
+            <stop offset="0%" stopColor="#F02D13" />
             <stop offset="100%" stopColor="#F02D13" />
           </linearGradient>
           <linearGradient id="orange-inner" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="#FDBA74" />
-            <stop offset="50%" stopColor="#FB923C" />
+            <stop offset="0%" stopColor="#EA4727" />
+            <stop offset="50%" stopColor="#EA4727" />
             <stop offset="100%" stopColor="#EA4727" />
           </linearGradient>
 
