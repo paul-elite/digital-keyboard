@@ -40,14 +40,20 @@ export default function Home() {
   const currentPhrase = PHRASES[phraseIndex];
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center p-8">
+    <main className="min-h-screen flex flex-col items-center justify-center p-8" style={{ backgroundColor: '#E1EDFA' }}>
       {/* Header Area */}
       <div className="w-full max-w-4xl mb-12 text-center text-gray-800">
         <h1 className="text-4xl font-extrabold tracking-tight mb-4">Typing Master</h1>
-        
+
         {gameState === 'idle' && (
-          <div className="animate-bounce mt-8">
-            <p className="text-xl text-blue-600 font-medium">✨ click on spacebar to get started</p>
+          <div className="mt-8">
+            <p className="text-xl text-black font-medium">
+              click on spacebar{' '}
+              <span className="inline-block px-3 py-1 bg-gray-100 border border-gray-300 rounded text-gray-500 font-mono text-sm mx-1 align-middle">
+                ␣
+              </span>{' '}
+              to get started
+            </p>
           </div>
         )}
 
@@ -83,7 +89,6 @@ export default function Home() {
         <DigitalKeyboard
           targetText={gameState === 'playing' ? currentPhrase : undefined}
           onComplete={handleComplete}
-          hintKeys={gameState === 'idle' ? ['Space'] : []}
           showActiveKeys={true}
         />
       </div>

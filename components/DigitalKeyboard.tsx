@@ -340,7 +340,10 @@ export default function DigitalKeyboard({
 
       {/* Target text display */}
       {targetText && (
-        <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg font-mono text-lg leading-relaxed">
+        <div 
+          className="mb-6 p-4 bg-white rounded-lg font-mono text-lg leading-relaxed"
+          style={{ boxShadow: '0px 0px 0px 0.5px rgba(0, 0, 0, 0.05)' }}
+        >
           {targetText.split('').map((char, i) => {
             let className = 'typing-char';
             if (i < stats.currentPosition) {
