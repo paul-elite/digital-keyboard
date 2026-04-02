@@ -9,11 +9,23 @@ const PHRASES = [
   "Typing fast is a great skill to have."
 ];
 
+interface GameSettings {
+  strictMode: boolean;
+  showHints: boolean;
+  soundEnabled: boolean;
+}
+
 export default function Home() {
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'completed'>('idle');
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [stats, setStats] = useState<TypingStats | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [settings, setSettings] = useState<GameSettings>({
+    strictMode: false,
+    showHints: true,
+    soundEnabled: false,
+  });
 
   // Trigger entry animation on mount
   useEffect(() => {
@@ -49,8 +61,73 @@ export default function Home() {
 
   const currentPhrase = PHRASES[phraseIndex];
 
+  const updateSetting = <K extends keyof GameSettings>(key: K, value: GameSettings[K]) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+  };
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-between p-8 pb-16" style={{ backgroundColor: '#FCFCFD' }}>
+    <main className="min-h-screen flex flex-col items-center justify-between p-8 pb-16 relative" style={{ backgroundColor: '#FCFCFD' }}>
+      {/* Settings Button */}
+      <button
+        onClick={() => setShowSettings(!showSettings)}
+        className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors"
+        aria-label="Settings"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"></path>
+        </svg>
+      </button>
+
+      {/* Settings Panel */}
+      {showSettings && (
+        <div className="absolute top-16 right-6 bg-white rounded-2xl shadow-xl border border-gray-100 p-6 w-72 z-10">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">Settings</h3>
+
+          {/* Strict Mode Toggle */}
+          <div className="flex items-center justify-between py-3 border-b border-gray-100">
+            <div>
+              <p className="font-medium text-gray-700">Strict Mode</p>
+              <p className="text-sm text-gray-400">Wait for correct key</p>
+            </div>
+            <button
+              onClick={() => updateSetting('strictMode', !settings.strictMode)}
+              className={`w-12 h-7 rounded-full transition-colors ${settings.strictMode ? 'bg-blue-500' : 'bg-gray-300'}`}
+            >
+              <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${settings.strictMode ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
+          </div>
+
+          {/* Show Hints Toggle */}
+          <div className="flex items-center justify-between py-3 border-b border-gray-100">
+            <div>
+              <p className="font-medium text-gray-700">Show Hints</p>
+              <p className="text-sm text-gray-400">Highlight next key</p>
+            </div>
+            <button
+              onClick={() => updateSetting('showHints', !settings.showHints)}
+              className={`w-12 h-7 rounded-full transition-colors ${settings.showHints ? 'bg-blue-500' : 'bg-gray-300'}`}
+            >
+              <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${settings.showHints ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
+          </div>
+
+          {/* Sound Toggle */}
+          <div className="flex items-center justify-between py-3">
+            <div>
+              <p className="font-medium text-gray-700">Sound Effects</p>
+              <p className="text-sm text-gray-400">Key press sounds</p>
+            </div>
+            <button
+              onClick={() => updateSetting('soundEnabled', !settings.soundEnabled)}
+              className={`w-12 h-7 rounded-full transition-colors ${settings.soundEnabled ? 'bg-blue-500' : 'bg-gray-300'}`}
+            >
+              <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${settings.soundEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header Area */}
       <div className="w-full max-w-4xl text-center text-gray-800 pt-12">
         <h1 className="text-4xl font-extrabold tracking-tight mb-4">Typing Master</h1>
@@ -107,6 +184,8 @@ export default function Home() {
           onComplete={handleComplete}
           showActiveKeys={true}
           orangeKeys={gameState === 'playing' ? ['Escape'] : []}
+          strictMode={settings.strictMode}
+          hintKeys={settings.showHints && gameState === 'idle' ? ['Space'] : []}
         />
       </div>
     </main>

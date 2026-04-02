@@ -39,7 +39,7 @@ export default function DigitalKeyboard({
   targetText,
   onComplete,
   onKeyPress,
-  strictMode = true,
+  strictMode = false,
   className = '',
   showActiveKeys = true,
   hintKeys = [],
