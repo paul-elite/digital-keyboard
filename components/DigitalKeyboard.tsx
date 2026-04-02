@@ -104,6 +104,20 @@ export default function DigitalKeyboard({
 
             // Add transition class
             group.classList.add('key-group');
+            
+            // Allow pointer cursor and click interactions
+            (group as HTMLElement).style.cursor = 'pointer';
+            
+            group.addEventListener('mousedown', (e) => {
+              e.preventDefault();
+              window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code.replace('Key', '') }));
+            });
+            group.addEventListener('mouseup', () => {
+              window.dispatchEvent(new KeyboardEvent('keyup', { code, key: code.replace('Key', '') }));
+            });
+            group.addEventListener('mouseleave', () => {
+              window.dispatchEvent(new KeyboardEvent('keyup', { code, key: code.replace('Key', '') }));
+            });
 
             // Store reference
             keyGroupsRef.current.set(code, group as SVGGElement);
@@ -392,23 +406,17 @@ export default function DigitalKeyboard({
           filter: brightness(3) !important;
         }
 
-        /* Correct state - green tint */
-        .key-correct {
-          transform: scale(0.97) translateY(1px);
-          filter:
-            brightness(0.95)
-            saturate(1.2)
-            drop-shadow(0 0 12px rgba(34, 197, 94, 0.7)) !important;
-        }
+        /* Generic Green Correct Key Style */
+        .key-correct > *:nth-child(1) { fill: #86EFAC !important; }
+        .key-correct > *:nth-child(2) { stroke: #4ADE80 !important; }
+        .key-correct > *:nth-child(3) { fill: #BBF7D0 !important; }
+        .key-correct > *:nth-child(4) { stroke: #22C55E !important; }
 
-        /* Incorrect state - red shake */
-        .key-incorrect {
-          filter:
-            brightness(1.05)
-            saturate(1.3)
-            drop-shadow(0 0 12px rgba(239, 68, 68, 0.8)) !important;
-          animation: shake 0.15s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-        }
+        /* Generic Red Incorrect Key Style */
+        .key-incorrect > *:nth-child(1) { fill: #FCA5A5 !important; }
+        .key-incorrect > *:nth-child(2) { stroke: #F87171 !important; }
+        .key-incorrect > *:nth-child(3) { fill: #FECACA !important; }
+        .key-incorrect > *:nth-child(4) { stroke: #EF4444 !important; }
 
         /* Generic Blue-ish Key Style (applied to next, hint, and explicit blue state) */
         .key-blue > *:nth-child(1), .key-next > *:nth-child(1), .key-hint > *:nth-child(1) { fill: #7AD8F8 !important; }
