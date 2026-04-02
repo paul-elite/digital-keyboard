@@ -50,7 +50,7 @@ export default function Home() {
   const currentPhrase = PHRASES[phraseIndex];
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-between p-8 pb-16" style={{ backgroundColor: '#F0F6FC' }}>
+    <main className="min-h-screen flex flex-col items-center justify-between p-8 pb-16" style={{ backgroundColor: '#FCFCFD' }}>
       {/* Header Area */}
       <div className="w-full max-w-4xl text-center text-gray-800 pt-12">
         <h1 className="text-4xl font-extrabold tracking-tight mb-4">Typing Master</h1>
