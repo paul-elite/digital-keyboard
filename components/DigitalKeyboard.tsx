@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { svgIndexToCode, isCorrectKey, getExpectedCode } from '@/lib/keyMap';
 
 // Key state for visual feedback
-export type KeyState = 'idle' | 'active' | 'correct' | 'incorrect' | 'next' | 'hint' | 'blue';
+export type KeyState = 'idle' | 'active' | 'correct' | 'incorrect' | 'next' | 'hint' | 'blue' | 'orange';
 
 export interface TypingStats {
   totalKeystrokes: number;
@@ -31,6 +31,8 @@ export interface DigitalKeyboardProps {
   hintKeys?: string[];
   /** Callback when a hint key is pressed */
   onHintKeyPress?: (code: string) => void;
+  /** Keys to highlight with orange state (e.g., ['Escape'] when playing) */
+  orangeKeys?: string[];
 }
 
 export default function DigitalKeyboard({
@@ -42,6 +44,7 @@ export default function DigitalKeyboard({
   showActiveKeys = true,
   hintKeys = [],
   onHintKeyPress,
+  orangeKeys = [],
 }: DigitalKeyboardProps) {
   const svgContainerRef = useRef<HTMLDivElement>(null);
   const keyGroupsRef = useRef<Map<string, SVGGElement>>(new Map());
@@ -143,7 +146,7 @@ export default function DigitalKeyboard({
     if (!group) return;
 
     // Remove all state classes
-    group.classList.remove('key-active', 'key-correct', 'key-incorrect', 'key-next', 'key-hint', 'key-blue');
+    group.classList.remove('key-active', 'key-correct', 'key-incorrect', 'key-next', 'key-hint', 'key-blue', 'key-orange');
 
     // Add new state class
     if (state !== 'idle') {
@@ -183,6 +186,24 @@ export default function DigitalKeyboard({
       }
     });
   }, [isLoaded, hintKeys]);
+
+  // Update orange keys highlight
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    // Clear all orange states first
+    keyGroupsRef.current.forEach((group) => {
+      group.classList.remove('key-orange');
+    });
+
+    // Apply orange state to specified keys
+    orangeKeys.forEach((code) => {
+      const group = keyGroupsRef.current.get(code);
+      if (group) {
+        group.classList.add('key-orange');
+      }
+    });
+  }, [isLoaded, orangeKeys]);
 
   // Handle keydown
   const handleKeyDown = useCallback(
@@ -395,6 +416,28 @@ export default function DigitalKeyboard({
             <stop offset="50%" stopColor="#BAE6FD" />
             <stop offset="100%" stopColor="#7DD3FC" />
           </linearGradient>
+
+          {/* Orange gradients for escape/cancel state - top to bottom (exact SVG colors) */}
+          <linearGradient id="orange-outer" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#F97316" />
+            <stop offset="100%" stopColor="#F02D13" />
+          </linearGradient>
+          <linearGradient id="orange-inner" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#FDBA74" />
+            <stop offset="50%" stopColor="#FB923C" />
+            <stop offset="100%" stopColor="#EA4727" />
+          </linearGradient>
+
+          {/* Grey gradients for default key state - top to bottom */}
+          <linearGradient id="grey-outer" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#F5F5F5" />
+            <stop offset="100%" stopColor="#E5E5E5" />
+          </linearGradient>
+          <linearGradient id="grey-inner" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="50%" stopColor="#FAFAFA" />
+            <stop offset="100%" stopColor="#F0F0F0" />
+          </linearGradient>
         </defs>
       </svg>
 
@@ -464,6 +507,20 @@ export default function DigitalKeyboard({
         .key-blue > *:nth-child(2), .key-next > *:nth-child(2), .key-hint > *:nth-child(2) { stroke: #38BDF8 !important; }
         .key-blue > *:nth-child(3), .key-next > *:nth-child(3), .key-hint > *:nth-child(3) { fill: url(#blue-inner) !important; }
         .key-blue > *:nth-child(4), .key-next > *:nth-child(4), .key-hint > *:nth-child(4) { stroke: #0EA5E9 !important; }
+
+        /* Generic Orange Key Style - top-down gradients (exact SVG escape colors) */
+        .key-orange > *:nth-child(1) { fill: url(#orange-outer) !important; }
+        .key-orange > *:nth-child(2) { stroke: #741717 !important; }
+        .key-orange > *:nth-child(3) { fill: url(#orange-inner) !important; }
+        .key-orange > *:nth-child(4) { stroke: #AB2727 !important; }
+        .key-orange path { fill: white !important; }
+
+        /* Override Escape key to be grey by default (matches other keys) */
+        .key-group[data-key="Escape"]:not(.key-orange):not(.key-active) > *:nth-child(1) { fill: url(#grey-outer) !important; }
+        .key-group[data-key="Escape"]:not(.key-orange):not(.key-active) > *:nth-child(2) { stroke: #DBDBDB !important; }
+        .key-group[data-key="Escape"]:not(.key-orange):not(.key-active) > *:nth-child(3) { fill: url(#grey-inner) !important; }
+        .key-group[data-key="Escape"]:not(.key-orange):not(.key-active) > *:nth-child(4) { stroke: #EEEEEE !important; }
+        .key-group[data-key="Escape"]:not(.key-orange):not(.key-active) path { fill: #404040 !important; }
 
         @keyframes shake {
           0%, 100% { transform: translateX(0) scale(0.97); }

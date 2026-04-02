@@ -90,6 +90,7 @@ export default function Home() {
           targetText={gameState === 'playing' ? currentPhrase : undefined}
           onComplete={handleComplete}
           showActiveKeys={true}
+          orangeKeys={gameState === 'playing' ? ['Escape'] : []}
         />
       </div>
     </main>
