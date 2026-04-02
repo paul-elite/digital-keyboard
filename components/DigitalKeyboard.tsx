@@ -332,47 +332,86 @@ export default function DigitalKeyboard({
         }
 
         .key-group {
-          transition: transform 0.08s ease-out, filter 0.08s ease-out;
+          transition:
+            transform 0.1s cubic-bezier(0.4, 0, 0.2, 1),
+            filter 0.1s cubic-bezier(0.4, 0, 0.2, 1);
           transform-origin: center;
           cursor: pointer;
+          transform-box: fill-box;
         }
 
         .key-group:hover {
-          filter: brightness(1.05);
+          filter: brightness(0.98);
         }
 
-        /* Active state - pressed */
+        /* Active/Pressed state - dark inversion matching Frame 48 */
         .key-active {
-          transform: scale(0.95);
-          filter: brightness(0.9) !important;
+          transform: scale(0.96) translateY(2px);
+          filter:
+            invert(0.85)
+            hue-rotate(180deg)
+            saturate(0.3)
+            brightness(0.4)
+            contrast(1.2) !important;
+          transition:
+            transform 0.05s cubic-bezier(0.4, 0, 1, 1),
+            filter 0.05s cubic-bezier(0.4, 0, 1, 1);
         }
 
-        /* Correct state - green glow */
+        /* Inner elements within pressed key */
+        .key-active rect,
+        .key-active path {
+          transition: fill 0.05s, stroke 0.05s;
+        }
+
+        /* Correct state - green tint */
         .key-correct {
-          filter: brightness(1.1) drop-shadow(0 0 8px rgba(34, 197, 94, 0.8)) !important;
+          transform: scale(0.97) translateY(1px);
+          filter:
+            brightness(0.95)
+            saturate(1.2)
+            drop-shadow(0 0 12px rgba(34, 197, 94, 0.7)) !important;
         }
 
-        /* Incorrect state - red glow */
+        /* Incorrect state - red shake */
         .key-incorrect {
-          filter: brightness(1.1) drop-shadow(0 0 8px rgba(239, 68, 68, 0.8)) !important;
-          animation: shake 0.2s ease-in-out;
+          filter:
+            brightness(1.05)
+            saturate(1.3)
+            drop-shadow(0 0 12px rgba(239, 68, 68, 0.8)) !important;
+          animation: shake 0.15s cubic-bezier(0.36, 0.07, 0.19, 0.97);
         }
 
-        /* Next expected key - subtle highlight */
+        /* Next expected key - subtle blue highlight */
         .key-next {
-          filter: brightness(1.15) drop-shadow(0 0 6px rgba(59, 130, 246, 0.6)) !important;
-          animation: pulse 1.5s ease-in-out infinite;
+          filter:
+            brightness(1.02)
+            drop-shadow(0 0 8px rgba(99, 179, 237, 0.5)) !important;
+          animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-3px); }
-          75% { transform: translateX(3px); }
+          0%, 100% { transform: translateX(0) scale(0.97); }
+          20% { transform: translateX(-4px) scale(0.97); }
+          40% { transform: translateX(4px) scale(0.97); }
+          60% { transform: translateX(-3px) scale(0.97); }
+          80% { transform: translateX(3px) scale(0.97); }
         }
 
         @keyframes pulse {
-          0%, 100% { filter: brightness(1.15) drop-shadow(0 0 6px rgba(59, 130, 246, 0.6)); }
-          50% { filter: brightness(1.25) drop-shadow(0 0 10px rgba(59, 130, 246, 0.8)); }
+          0%, 100% {
+            filter: brightness(1.02) drop-shadow(0 0 8px rgba(99, 179, 237, 0.5));
+          }
+          50% {
+            filter: brightness(1.05) drop-shadow(0 0 14px rgba(99, 179, 237, 0.7));
+          }
+        }
+
+        /* Key release animation - spring back */
+        .key-group:not(.key-active):not(.key-correct):not(.key-incorrect) {
+          transition:
+            transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+            filter 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* Typing text styles */
@@ -387,13 +426,6 @@ export default function DigitalKeyboard({
         .typing-char.current {
           background-color: rgba(59, 130, 246, 0.3);
           border-radius: 2px;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-          .typing-char.current {
-            background-color: rgba(59, 130, 246, 0.4);
-          }
         }
       `}</style>
     </div>
