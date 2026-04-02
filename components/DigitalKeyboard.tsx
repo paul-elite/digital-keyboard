@@ -57,7 +57,8 @@ export default function DigitalKeyboard({
     currentPosition: 0,
   });
 
-  // Track which positions had incorrect keystrokes
+  // Track which positions had incorrect keystrokes (using ref for sync updates)
+  const failedPositionsRef = useRef<Set<number>>(new Set());
   const [failedPositions, setFailedPositions] = useState<Set<number>>(new Set());
 
   // Active keys set for visual feedback
@@ -77,6 +78,7 @@ export default function DigitalKeyboard({
 
   // Reset failed positions when targetText changes
   useEffect(() => {
+    failedPositionsRef.current = new Set();
     setFailedPositions(new Set());
   }, [targetText]);
 
@@ -268,7 +270,9 @@ export default function DigitalKeyboard({
 
             // In non-strict mode, still advance and track failed position
             if (!strictMode) {
-              setFailedPositions(prev => new Set(prev).add(newStats.currentPosition));
+              const failPos = prev.currentPosition;
+              failedPositionsRef.current.add(failPos);
+              setFailedPositions(new Set(failedPositionsRef.current));
               newStats.currentPosition = prev.currentPosition + 1;
 
               // Check completion even with errors
@@ -324,6 +328,7 @@ export default function DigitalKeyboard({
       startTime: null,
       currentPosition: 0,
     });
+    failedPositionsRef.current = new Set();
     setFailedPositions(new Set());
 
     // Clear all key states
