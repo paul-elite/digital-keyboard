@@ -4,30 +4,36 @@ import { useState, useEffect } from 'react';
 import DigitalKeyboard from '@/components/DigitalKeyboard';
 
 export default function Home() {
-  const [started, setStarted] = useState(false);
+  const [typedText, setTypedText] = useState('');
+  const [lastCode, setLastCode] = useState('');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === 'Space' && !started) {
-        e.preventDefault();
-        setStarted(true);
+      setLastCode(e.code);
+
+      if (e.key === 'Backspace') {
+        setTypedText(prev => prev.slice(0, -1));
+      } else if (e.key.length === 1) {
+        setTypedText(prev => prev + e.key);
+      } else if (e.key === 'Enter') {
+        setTypedText(prev => prev + '\n');
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [started]);
+  }, []);
 
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-center p-8">
-      {/* Prompt */}
-      <p className="text-gray-800 text-xl mb-12 font-light tracking-wide">
-        press the spacebar{' '}
-        <span className="inline-block px-3 py-1 bg-gray-100 border border-gray-200 rounded text-gray-500 font-mono text-sm mx-1">
-          ␣
-        </span>{' '}
-        to begin
-      </p>
+      {/* Typed text display */}
+      <div className="w-full max-w-4xl mb-8">
+        <div className="min-h-[80px] p-4 bg-gray-50 border border-gray-200 rounded-lg font-mono text-lg text-gray-800 whitespace-pre-wrap">
+          {typedText || <span className="text-gray-400">Start typing...</span>}
+          <span className="inline-block w-0.5 h-5 bg-blue-500 ml-0.5 animate-pulse align-middle" />
+        </div>
+        <p className="mt-2 text-sm text-gray-400 font-mono">Last key code: {lastCode || 'none'}</p>
+      </div>
 
       {/* Keyboard */}
       <div className="w-full max-w-4xl">
