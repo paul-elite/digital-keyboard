@@ -88,7 +88,10 @@ export default function Home() {
 
       {/* Settings Panel */}
       {showSettings && (
-        <div className={`absolute top-16 right-6 rounded-2xl shadow-xl border p-6 w-72 z-10 transition-colors duration-300 ${isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
+        <div
+          className={`absolute top-16 right-6 rounded-2xl border p-6 w-72 z-10 transition-colors duration-300 ${isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}
+          style={{ boxShadow: '0 0 0 0.5px rgba(0, 0, 0, 0.05)' }}
+        >
           <h3 className={`text-lg font-bold mb-4 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>Settings</h3>
 
           {/* Dark Mode Toggle */}
