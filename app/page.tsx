@@ -195,9 +195,33 @@ export default function Home() {
         )}
       </div>
 
-      {/* Keyboard with entry animation */}
+      {/* Mobile keyboard input - shows native keyboard */}
+      <div className="md:hidden w-full max-w-md px-4">
+        <input
+          type="text"
+          className={`w-full p-4 text-lg rounded-xl border text-center transition-colors duration-300 ${
+            isDark
+              ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500'
+              : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400'
+          }`}
+          placeholder={gameState === 'idle' ? 'Tap to start typing...' : 'Type here...'}
+          onFocus={() => {
+            if (gameState === 'idle') {
+              setGameState('playing');
+              setPhraseIndex(Math.floor(Math.random() * PHRASES.length));
+              setStats(null);
+            }
+          }}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
+        />
+      </div>
+
+      {/* Desktop Keyboard with entry animation - hidden on mobile */}
       <div
-        className="w-full max-w-5xl relative"
+        className="hidden md:block w-full max-w-5xl relative"
         style={{
           transform: isLoaded ? 'translateY(0)' : 'translateY(100vh)',
           transition: 'transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s',
