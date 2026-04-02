@@ -360,6 +360,44 @@ export default function DigitalKeyboard({
         </div>
       )}
 
+      {/* SVG Gradient Definitions for key states */}
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <defs>
+          {/* Green gradients for correct state - top to bottom */}
+          <linearGradient id="correct-outer" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#6EE7A0" />
+            <stop offset="100%" stopColor="#86EFAC" />
+          </linearGradient>
+          <linearGradient id="correct-inner" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#D1FAE5" />
+            <stop offset="50%" stopColor="#A7F3D0" />
+            <stop offset="100%" stopColor="#6EE7B7" />
+          </linearGradient>
+
+          {/* Red gradients for incorrect state - top to bottom */}
+          <linearGradient id="incorrect-outer" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#FDA4AF" />
+            <stop offset="100%" stopColor="#F87171" />
+          </linearGradient>
+          <linearGradient id="incorrect-inner" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#FFE4E6" />
+            <stop offset="50%" stopColor="#FECDD3" />
+            <stop offset="100%" stopColor="#FDA4AF" />
+          </linearGradient>
+
+          {/* Blue gradients for hint/next state - top to bottom */}
+          <linearGradient id="blue-outer" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#67E8F9" />
+            <stop offset="100%" stopColor="#7AD8F8" />
+          </linearGradient>
+          <linearGradient id="blue-inner" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#E0F2FE" />
+            <stop offset="50%" stopColor="#BAE6FD" />
+            <stop offset="100%" stopColor="#7DD3FC" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       {/* SVG Keyboard container */}
       <div
         ref={svgContainerRef}
@@ -409,23 +447,23 @@ export default function DigitalKeyboard({
           filter: brightness(3) !important;
         }
 
-        /* Generic Green Correct Key Style */
-        .key-correct > *:nth-child(1) { fill: #86EFAC !important; }
+        /* Generic Green Correct Key Style - top-down gradients */
+        .key-correct > *:nth-child(1) { fill: url(#correct-outer) !important; }
         .key-correct > *:nth-child(2) { stroke: #4ADE80 !important; }
-        .key-correct > *:nth-child(3) { fill: #BBF7D0 !important; }
+        .key-correct > *:nth-child(3) { fill: url(#correct-inner) !important; }
         .key-correct > *:nth-child(4) { stroke: #22C55E !important; }
 
-        /* Generic Red Incorrect Key Style */
-        .key-incorrect > *:nth-child(1) { fill: #F4728A !important; }
-        .key-incorrect > *:nth-child(2) { stroke: #F88A9F !important; }
-        .key-incorrect > *:nth-child(3) { fill: #FCAEBE !important; }
-        .key-incorrect > *:nth-child(4) { stroke: #F68B9F !important; }
+        /* Generic Red Incorrect Key Style - top-down gradients */
+        .key-incorrect > *:nth-child(1) { fill: url(#incorrect-outer) !important; }
+        .key-incorrect > *:nth-child(2) { stroke: #FB7185 !important; }
+        .key-incorrect > *:nth-child(3) { fill: url(#incorrect-inner) !important; }
+        .key-incorrect > *:nth-child(4) { stroke: #F43F5E !important; }
 
-        /* Generic Blue-ish Key Style (applied to next, hint, and explicit blue state) */
-        .key-blue > *:nth-child(1), .key-next > *:nth-child(1), .key-hint > *:nth-child(1) { fill: #7AD8F8 !important; }
-        .key-blue > *:nth-child(2), .key-next > *:nth-child(2), .key-hint > *:nth-child(2) { stroke: #8EBFF6 !important; }
-        .key-blue > *:nth-child(3), .key-next > *:nth-child(3), .key-hint > *:nth-child(3) { fill: #AEE7FD !important; }
-        .key-blue > *:nth-child(4), .key-next > *:nth-child(4), .key-hint > *:nth-child(4) { stroke: #85B8FB !important; }
+        /* Generic Blue-ish Key Style - top-down gradients (applied to next, hint, and explicit blue state) */
+        .key-blue > *:nth-child(1), .key-next > *:nth-child(1), .key-hint > *:nth-child(1) { fill: url(#blue-outer) !important; }
+        .key-blue > *:nth-child(2), .key-next > *:nth-child(2), .key-hint > *:nth-child(2) { stroke: #38BDF8 !important; }
+        .key-blue > *:nth-child(3), .key-next > *:nth-child(3), .key-hint > *:nth-child(3) { fill: url(#blue-inner) !important; }
+        .key-blue > *:nth-child(4), .key-next > *:nth-child(4), .key-hint > *:nth-child(4) { stroke: #0EA5E9 !important; }
 
         @keyframes shake {
           0%, 100% { transform: translateX(0) scale(0.97); }
