@@ -57,6 +57,9 @@ export default function DigitalKeyboard({
     currentPosition: 0,
   });
 
+  // Track which positions had incorrect keystrokes
+  const [failedPositions, setFailedPositions] = useState<Set<number>>(new Set());
+
   // Active keys set for visual feedback
   const activeKeysRef = useRef<Set<string>>(new Set());
 
@@ -71,6 +74,11 @@ export default function DigitalKeyboard({
     if (!expectedChar) return null;
     return getExpectedCode(expectedChar) || null;
   }, [expectedChar]);
+
+  // Reset failed positions when targetText changes
+  useEffect(() => {
+    setFailedPositions(new Set());
+  }, [targetText]);
 
   // Load and process SVG
   useEffect(() => {
@@ -258,9 +266,15 @@ export default function DigitalKeyboard({
             // Show incorrect feedback
             setKeyState(code, 'incorrect');
 
-            // In non-strict mode, still advance
+            // In non-strict mode, still advance and track failed position
             if (!strictMode) {
+              setFailedPositions(prev => new Set(prev).add(newStats.currentPosition));
               newStats.currentPosition = prev.currentPosition + 1;
+
+              // Check completion even with errors
+              if (newStats.currentPosition >= targetText.length) {
+                onComplete?.(newStats);
+              }
             }
           }
 
@@ -310,6 +324,7 @@ export default function DigitalKeyboard({
       startTime: null,
       currentPosition: 0,
     });
+    setFailedPositions(new Set());
 
     // Clear all key states
     keyGroupsRef.current.forEach((group) => {
@@ -368,7 +383,7 @@ export default function DigitalKeyboard({
           {targetText.split('').map((char, i) => {
             let className = 'typing-char';
             if (i < stats.currentPosition) {
-              className += ' typed';
+              className += failedPositions.has(i) ? ' failed' : ' typed';
             } else if (i === stats.currentPosition) {
               className += ' current';
             }
@@ -543,7 +558,11 @@ export default function DigitalKeyboard({
         }
 
         .typing-char.typed {
-          color: #22c55e;
+          color: #BCE5C2;
+        }
+
+        .typing-char.failed {
+          color: #FEC5C9;
         }
 
         .typing-char.current {
