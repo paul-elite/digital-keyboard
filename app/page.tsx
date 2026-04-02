@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import DigitalKeyboard from '@/components/DigitalKeyboard';
 
 export default function Home() {
   const [typedText, setTypedText] = useState('');
   const [lastCode, setLastCode] = useState('');
+  const [hintKeys, setHintKeys] = useState<string[]>(['Space']);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -24,6 +25,10 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const handleHintKeyPress = useCallback((code: string) => {
+    setHintKeys(prev => prev.filter(k => k !== code));
+  }, []);
+
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-center p-8">
       {/* Typed text display */}
@@ -37,7 +42,11 @@ export default function Home() {
 
       {/* Keyboard */}
       <div className="w-full max-w-4xl">
-        <DigitalKeyboard showActiveKeys={true} />
+        <DigitalKeyboard
+          showActiveKeys={true}
+          hintKeys={hintKeys}
+          onHintKeyPress={handleHintKeyPress}
+        />
       </div>
     </main>
   );

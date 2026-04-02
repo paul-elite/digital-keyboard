@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { svgIndexToCode, isCorrectKey, getExpectedCode } from '@/lib/keyMap';
 
 // Key state for visual feedback
-export type KeyState = 'idle' | 'active' | 'correct' | 'incorrect' | 'next';
+export type KeyState = 'idle' | 'active' | 'correct' | 'incorrect' | 'next' | 'hint';
 
 export interface TypingStats {
   totalKeystrokes: number;
@@ -27,6 +27,10 @@ export interface DigitalKeyboardProps {
   className?: string;
   /** Show key states even without target text */
   showActiveKeys?: boolean;
+  /** Keys to highlight with hint state (e.g., ['Space'] for tutorial) */
+  hintKeys?: string[];
+  /** Callback when a hint key is pressed */
+  onHintKeyPress?: (code: string) => void;
 }
 
 export default function DigitalKeyboard({
@@ -36,6 +40,8 @@ export default function DigitalKeyboard({
   strictMode = true,
   className = '',
   showActiveKeys = true,
+  hintKeys = [],
+  onHintKeyPress,
 }: DigitalKeyboardProps) {
   const svgContainerRef = useRef<HTMLDivElement>(null);
   const keyGroupsRef = useRef<Map<string, SVGGElement>>(new Map());
@@ -123,7 +129,7 @@ export default function DigitalKeyboard({
     if (!group) return;
 
     // Remove all state classes
-    group.classList.remove('key-active', 'key-correct', 'key-incorrect', 'key-next');
+    group.classList.remove('key-active', 'key-correct', 'key-incorrect', 'key-next', 'key-hint');
 
     // Add new state class
     if (state !== 'idle') {
@@ -146,6 +152,24 @@ export default function DigitalKeyboard({
     }
   }, [isLoaded, expectedCode, targetText, setKeyState]);
 
+  // Update hint keys highlight
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    // Clear all hint states first
+    keyGroupsRef.current.forEach((group) => {
+      group.classList.remove('key-hint');
+    });
+
+    // Apply hint state to specified keys
+    hintKeys.forEach((code) => {
+      const group = keyGroupsRef.current.get(code);
+      if (group) {
+        group.classList.add('key-hint');
+      }
+    });
+  }, [isLoaded, hintKeys]);
+
   // Handle keydown
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -164,6 +188,11 @@ export default function DigitalKeyboard({
       // Visual feedback for active state
       if (showActiveKeys) {
         setKeyState(code, 'active');
+      }
+
+      // Check if this is a hint key
+      if (hintKeys.includes(code)) {
+        onHintKeyPress?.(code);
       }
 
       // Typing mode logic
@@ -206,7 +235,7 @@ export default function DigitalKeyboard({
         });
       }
     },
-    [targetText, expectedChar, strictMode, showActiveKeys, setKeyState, onComplete, onKeyPress]
+    [targetText, expectedChar, strictMode, showActiveKeys, setKeyState, onComplete, onKeyPress, hintKeys, onHintKeyPress]
   );
 
   // Handle keyup
@@ -389,6 +418,14 @@ export default function DigitalKeyboard({
           animation: pulse 2s ease-in-out infinite;
         }
 
+        /* Hint state - gentle glow for tips/tutorials */
+        .key-hint {
+          filter:
+            brightness(1.05)
+            drop-shadow(0 0 12px rgba(147, 112, 219, 0.6)) !important;
+          animation: hint-pulse 1.5s ease-in-out infinite;
+        }
+
         @keyframes shake {
           0%, 100% { transform: translateX(0) scale(0.97); }
           20% { transform: translateX(-4px) scale(0.97); }
@@ -403,6 +440,15 @@ export default function DigitalKeyboard({
           }
           50% {
             filter: brightness(1.05) drop-shadow(0 0 14px rgba(99, 179, 237, 0.7));
+          }
+        }
+
+        @keyframes hint-pulse {
+          0%, 100% {
+            filter: brightness(1.05) drop-shadow(0 0 12px rgba(147, 112, 219, 0.6));
+          }
+          50% {
+            filter: brightness(1.1) drop-shadow(0 0 18px rgba(147, 112, 219, 0.85));
           }
         }
 
