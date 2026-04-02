@@ -98,7 +98,7 @@ export default function Home() {
       <div
         className="w-full max-w-5xl relative"
         style={{
-          transform: isLoaded ? 'translateY(0)' : 'translateY(80px)',
+          transform: isLoaded ? 'translateY(0)' : 'translateY(100vh)',
           transition: 'transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s',
         }}
       >
