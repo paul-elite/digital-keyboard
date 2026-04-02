@@ -6,7 +6,7 @@ import DigitalKeyboard from '@/components/DigitalKeyboard';
 export default function Home() {
   const [typedText, setTypedText] = useState('');
   const [lastCode, setLastCode] = useState('');
-  const [hintKeys, setHintKeys] = useState<string[]>(['Space']);
+  const [hintKeys, setHintKeys] = useState<string[]>([]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

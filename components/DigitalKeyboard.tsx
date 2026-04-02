@@ -426,6 +426,12 @@ export default function DigitalKeyboard({
           animation: hint-pulse 1.5s ease-in-out infinite;
         }
 
+        /* Generic Blue-ish Key Style */
+        .key-blue > *:nth-child(1) { fill: #7AD8F8 !important; }
+        .key-blue > *:nth-child(2) { stroke: #8EBFF6 !important; }
+        .key-blue > *:nth-child(3) { fill: #AEE7FD !important; }
+        .key-blue > *:nth-child(4) { stroke: #85B8FB !important; }
+
         @keyframes shake {
           0%, 100% { transform: translateX(0) scale(0.97); }
           20% { transform: translateX(-4px) scale(0.97); }
