@@ -13,6 +13,13 @@ export default function Home() {
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'completed'>('idle');
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [stats, setStats] = useState<TypingStats | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Trigger entry animation on mount
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -43,9 +50,9 @@ export default function Home() {
   const currentPhrase = PHRASES[phraseIndex];
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8" style={{ backgroundColor: '#F0F6FC' }}>
+    <main className="min-h-screen flex flex-col items-center justify-between p-8 pb-16" style={{ backgroundColor: '#F0F6FC' }}>
       {/* Header Area */}
-      <div className="w-full max-w-4xl mb-12 text-center text-gray-800">
+      <div className="w-full max-w-4xl text-center text-gray-800 pt-12">
         <h1 className="text-4xl font-extrabold tracking-tight mb-4">Typing Master</h1>
 
         {gameState === 'idle' && (
@@ -77,7 +84,7 @@ export default function Home() {
                 </span>
               </div>
             </div>
-            <button 
+            <button
               onClick={handlePlayAgain}
               className="mt-6 px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full font-bold transition-colors"
             >
@@ -87,8 +94,15 @@ export default function Home() {
         )}
       </div>
 
-      {/* Keyboard */}
-      <div className="w-full max-w-5xl relative">
+      {/* Keyboard with entry animation */}
+      <div
+        className="w-full max-w-5xl relative"
+        style={{
+          transform: isLoaded ? 'translateY(0)' : 'translateY(60px)',
+          opacity: isLoaded ? 1 : 0,
+          transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease-out',
+        }}
+      >
         <DigitalKeyboard
           targetText={gameState === 'playing' ? currentPhrase : undefined}
           onComplete={handleComplete}
