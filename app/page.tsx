@@ -98,9 +98,8 @@ export default function Home() {
       <div
         className="w-full max-w-5xl relative"
         style={{
-          transform: isLoaded ? 'translateY(0)' : 'translateY(60px)',
-          opacity: isLoaded ? 1 : 0,
-          transition: 'transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1s ease-out',
+          transform: isLoaded ? 'translateY(0)' : 'translateY(80px)',
+          transition: 'transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1)',
         }}
       >
         <DigitalKeyboard
