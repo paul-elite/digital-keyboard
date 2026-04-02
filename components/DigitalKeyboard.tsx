@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
-import { codeToSvgIndex, isCorrectKey, getExpectedCode } from '@/lib/keyMap';
+import { svgIndexToCode, isCorrectKey, getExpectedCode } from '@/lib/keyMap';
 
 // Key state for visual feedback
 export type KeyState = 'idle' | 'active' | 'correct' | 'incorrect' | 'next';
@@ -88,9 +88,7 @@ export default function DigitalKeyboard({
         const keyGroups = svgElement.querySelectorAll(':scope > g[filter]');
 
         keyGroups.forEach((group, index) => {
-          const code = Object.entries(codeToSvgIndex).find(
-            ([, idx]) => idx === index
-          )?.[1];
+          const code = svgIndexToCode[index];
 
           if (code) {
             // Add data-key attribute
