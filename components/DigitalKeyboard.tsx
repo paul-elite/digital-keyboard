@@ -84,8 +84,9 @@ export default function DigitalKeyboard({
         svgElement.setAttribute('height', 'auto');
         svgElement.style.maxWidth = '100%';
 
-        // Find all key groups (direct children g elements with filters)
-        const keyGroups = svgElement.querySelectorAll(':scope > g[filter]');
+        // Find all key groups (nested g elements with filters inside the keyboard frame)
+        // The first g[filter] is the keyboard frame, keys are g[filter] elements inside it
+        const keyGroups = svgElement.querySelectorAll(':scope > g[filter] > g[filter]');
 
         keyGroups.forEach((group, index) => {
           const code = svgIndexToCode[index];
