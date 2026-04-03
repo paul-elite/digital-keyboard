@@ -265,7 +265,20 @@ export default function DigitalKeyboard({
 
       // Typing mode logic
       if (targetText && expectedChar !== null) {
-        const isCorrect = isCorrectKey(code, expectedChar);
+        // Check if this character requires Shift (uppercase letter)
+        const charRequiresShift = expectedChar >= 'A' && expectedChar <= 'Z';
+
+        // Ignore Shift key presses when expecting a capital letter - don't count as keystroke
+        if (charRequiresShift && (code === 'ShiftLeft' || code === 'ShiftRight')) {
+          return;
+        }
+
+        // Check if the key matches the expected character
+        const keyMatches = isCorrectKey(code, expectedChar);
+
+        // For uppercase letters, also verify Shift is held
+        // For lowercase/other chars, just check the key
+        const isCorrect = keyMatches && (!charRequiresShift || event.shiftKey);
 
         // Play sound feedback
         if (soundEnabled) {
