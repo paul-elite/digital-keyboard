@@ -234,6 +234,7 @@ export default function Home() {
           orangeKeys={gameState === 'playing' ? ['Escape'] : []}
           strictMode={settings.strictMode}
           hintKeys={settings.showHints && gameState === 'idle' ? ['Space'] : []}
+          soundEnabled={settings.soundEnabled}
         />
       </div>
     </main>

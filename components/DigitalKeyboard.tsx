@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { svgIndexToCode, isCorrectKey, getExpectedCode } from '@/lib/keyMap';
+import { playKeySound } from '@/lib/sounds';
 
 // Key state for visual feedback
 export type KeyState = 'idle' | 'active' | 'correct' | 'incorrect' | 'next' | 'hint' | 'blue' | 'orange';
@@ -33,6 +34,8 @@ export interface DigitalKeyboardProps {
   onHintKeyPress?: (code: string) => void;
   /** Keys to highlight with orange state (e.g., ['Escape'] when playing) */
   orangeKeys?: string[];
+  /** Enable key press sounds */
+  soundEnabled?: boolean;
 }
 
 export default function DigitalKeyboard({
@@ -45,6 +48,7 @@ export default function DigitalKeyboard({
   hintKeys = [],
   onHintKeyPress,
   orangeKeys = [],
+  soundEnabled = false,
 }: DigitalKeyboardProps) {
   const svgContainerRef = useRef<HTMLDivElement>(null);
   const keyGroupsRef = useRef<Map<string, SVGGElement>>(new Map());
@@ -240,9 +244,19 @@ export default function DigitalKeyboard({
         onHintKeyPress?.(code);
       }
 
+      // Play general key press sound when not in typing mode
+      if (soundEnabled && !targetText) {
+        playKeySound('press');
+      }
+
       // Typing mode logic
       if (targetText && expectedChar !== null) {
         const isCorrect = isCorrectKey(code, expectedChar);
+
+        // Play sound feedback
+        if (soundEnabled) {
+          playKeySound(isCorrect ? 'correct' : 'incorrect');
+        }
 
         setStats((prev) => {
           const newStats = {
@@ -288,7 +302,7 @@ export default function DigitalKeyboard({
         });
       }
     },
-    [targetText, expectedChar, strictMode, showActiveKeys, setKeyState, onComplete, onKeyPress, hintKeys, onHintKeyPress]
+    [targetText, expectedChar, strictMode, showActiveKeys, setKeyState, onComplete, onKeyPress, hintKeys, onHintKeyPress, soundEnabled]
   );
 
   // Handle keyup
