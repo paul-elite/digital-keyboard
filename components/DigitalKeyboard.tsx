@@ -80,6 +80,12 @@ export default function DigitalKeyboard({
     return getExpectedCode(expectedChar) || null;
   }, [expectedChar]);
 
+  // Check if expected character requires Shift (uppercase letter)
+  const requiresShift = useMemo(() => {
+    if (!expectedChar) return false;
+    return expectedChar >= 'A' && expectedChar <= 'Z';
+  }, [expectedChar]);
+
   // Reset failed positions when targetText changes
   useEffect(() => {
     failedPositionsRef.current = new Set();
@@ -181,7 +187,15 @@ export default function DigitalKeyboard({
     if (expectedCode) {
       setKeyState(expectedCode, 'next');
     }
-  }, [isLoaded, expectedCode, targetText, setKeyState]);
+
+    // Also highlight Shift key for capital letters
+    if (requiresShift) {
+      const shiftGroup = keyGroupsRef.current.get('ShiftLeft');
+      if (shiftGroup) {
+        shiftGroup.classList.add('key-next');
+      }
+    }
+  }, [isLoaded, expectedCode, targetText, setKeyState, requiresShift]);
 
   // Update hint keys highlight
   useEffect(() => {
