@@ -169,7 +169,10 @@ export default function Home() {
         )}
 
         {gameState === 'completed' && stats && (
-          <div className={`p-6 rounded-2xl shadow-xl border max-w-md mx-auto mt-4 transition-colors duration-300 ${isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
+          <div
+            className={`p-6 rounded-2xl border max-w-md mx-auto mt-4 transition-colors duration-300 ${isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}
+            style={{ boxShadow: '0 0 0 0.5px rgba(0, 0, 0, 0.05)' }}
+          >
             <h2 className="text-2xl font-bold mb-4 text-green-500">Great Job!</h2>
             <div className="flex justify-center gap-8 text-lg">
               <div>
@@ -204,6 +207,7 @@ export default function Home() {
               ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500'
               : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400'
           }`}
+          style={{ boxShadow: '0 0 0 0.5px rgba(0, 0, 0, 0.05)' }}
           placeholder={gameState === 'idle' ? 'Tap to start typing...' : 'Type here...'}
           onFocus={() => {
             if (gameState === 'idle') {
